@@ -1,0 +1,2 @@
+include ':app', ':isc'
+rootProject.name='SDR-HIKVISION-ISC'
