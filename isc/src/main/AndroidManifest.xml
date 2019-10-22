@@ -3,7 +3,8 @@
     package="com.sdr.lib.isc">
 
     <application>
-        <activity android:name=".HikvisionMainActivity"></activity>
+        <activity android:name=".HikvisionControlActivity"></activity>
+        <activity android:name=".HikvisionMainActivity" />
     </application>
 
 </manifest>

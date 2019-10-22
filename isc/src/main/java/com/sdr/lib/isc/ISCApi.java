@@ -1,6 +1,7 @@
 package com.sdr.lib.isc;
 
 import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -27,6 +28,6 @@ interface ISCApi {
      * @return
      */
     @GET("hkIscTransform")
-    Observable<Entity.HIKBaseData<Entity.Preview>> getCameraUrl(@Query("url") String url, @Query("jsonStr") String json);
+    Observable<ResponseBody> transform(@Query("url") String url, @Query("jsonStr") String json);
 
 }

@@ -8,14 +8,16 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.sdr.lib.base.BaseActivity;
 import com.sdr.lib.util.AlertUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class HikvisionMainActivity extends BaseActivity {
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.ResourceObserver;
+
+public class HikvisionMainActivity extends HikBaseActivity {
 
     private RecyclerView recyclerView;
     private RadioGroup radioGroup;
@@ -24,6 +26,8 @@ public class HikvisionMainActivity extends BaseActivity {
 
     private int currentViewNum = 2;  //当前的视图数
     private HikvisionRecyclerAdapter recyclerAdapter;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
     @Override
@@ -44,6 +48,33 @@ public class HikvisionMainActivity extends BaseActivity {
 
     private void initData() {
         changeRecyclerGrid(currentViewNum);
+
+        // 获取cameraList
+        compositeDisposable.add(
+                HttpService.getService()
+                        .getResourceList()
+                        .compose(Util.RxUtils.<Entity.Resource>baseData())
+                        .compose(Util.RxUtils.<Entity.Resource>io_main())
+                        .subscribeWith(new ResourceObserver<Entity.Resource>() {
+
+                            @Override
+                            public void onNext(Entity.Resource resource) {
+                                // TODO: 2019/10/22 获取资源后放到adapter中去
+                                showContentView();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                AlertUtil.showNegativeToast(e.getMessage());
+                                showContentView();
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                showContentView();
+                            }
+                        })
+        );
     }
 
     private void initListener() {
@@ -66,13 +97,39 @@ public class HikvisionMainActivity extends BaseActivity {
                     return;
                 }
                 int position = recyclerAdapter.getLastPosition();
-                if (position == -1) {
+                if (position == -1 || recyclerAdapter.getItem(position).getStatus() != Interface.PlayerStatus.SUCCESS) {
                     AlertUtil.showNegativeToastTop("请选择一个正在播放的窗口");
+                    return;
                 }
+
+
             }
         });
     }
 
+
+    @Override
+    protected void onResume() {
+        if (recyclerAdapter != null) {
+            recyclerAdapter.onResume();
+        }
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        if (recyclerAdapter != null) {
+            recyclerAdapter.onPause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.clear();
+    }
 
     /**
      * 切换视图1*1 2*2 3*3 4*4
@@ -80,7 +137,7 @@ public class HikvisionMainActivity extends BaseActivity {
     private void changeRecyclerGrid(int num) {
         if (recyclerAdapter == null) {
             List<HKItemControl> itemList = new ArrayList<>();
-            recyclerAdapter = new HikvisionRecyclerAdapter(R.layout.hk_isc_layout_hkvideo_main_recycler_item, itemList);
+            recyclerAdapter = new HikvisionRecyclerAdapter(R.layout.hk_isc_layout_hkvideo_main_recycler_item, itemList, this);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), num);
             recyclerView.setLayoutManager(gridLayoutManager);
             recyclerAdapter.bindToRecyclerView(recyclerView);

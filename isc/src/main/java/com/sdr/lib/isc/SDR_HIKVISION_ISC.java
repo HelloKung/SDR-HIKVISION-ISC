@@ -33,7 +33,17 @@ public class SDR_HIKVISION_ISC {
     }
 
 
-    // ——————————————————————————————————————————————————————————————————————
+    // ——————————————————————————SET————————————————————————————————————————————
+    private boolean isControl = true;
+
+    public boolean isControl() {
+        return isControl;
+    }
+
+    public void setControl(boolean control) {
+        isControl = control;
+    }
+    // ——————————————————————————GET————————————————————————————————————————————
 
     private String serviceUrl;
 

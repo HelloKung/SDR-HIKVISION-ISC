@@ -1,5 +1,7 @@
 package com.sdr.lib.isc;
 
+import java.security.PublicKey;
+
 /**
  * Created by HyFun on 2019/10/21.
  * Email: 775183940@qq.com
@@ -13,6 +15,8 @@ class Entity {
      * @param <T>
      */
     public static class BaseData<T> {
+        public static final int SUCCESS = 0;
+
         private int code;
         private T data;
         private String msg;
