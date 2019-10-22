@@ -15,6 +15,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.sdr.lib.ui.tree.TreeNode;
 import com.sdr.lib.ui.tree.TreeNodeRecyclerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,7 +96,7 @@ class HikvisionRecyclerAdapter extends BaseQuickAdapter<HKItemControl, BaseViewH
     }
 
     // ————————————————————————————————————GET和SET——————————————————————————————————————————————————
-    private List<TreeNode> treeNodeList;  // 摄像头树形列表
+    private List<TreeNode> treeNodeList = new ArrayList<>();  // 摄像头树形列表
 
     public void setTreeNodeList(List<TreeNode> treeNodeList) {
         this.treeNodeList = treeNodeList;

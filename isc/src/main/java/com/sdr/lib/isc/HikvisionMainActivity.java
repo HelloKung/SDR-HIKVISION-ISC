@@ -50,6 +50,7 @@ public class HikvisionMainActivity extends HikBaseActivity {
         changeRecyclerGrid(currentViewNum);
 
         // 获取cameraList
+        showLoadingView();
         compositeDisposable.add(
                 HttpService.getService()
                         .getResourceList()

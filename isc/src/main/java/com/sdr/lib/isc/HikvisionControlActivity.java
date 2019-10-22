@@ -148,7 +148,7 @@ public class HikvisionControlActivity extends HikBaseActivity implements Interfa
             @Override
             public void onClick(View v) {
                 new RxPermissions(getActivity())
-                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)
                         .subscribe(new Consumer<Boolean>() {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception {
@@ -411,9 +411,6 @@ public class HikvisionControlActivity extends HikBaseActivity implements Interfa
         hideLoadingDialog();
         AlertUtil.showNegativeToast(message);
     }
-
-
-
 
 
     /**
